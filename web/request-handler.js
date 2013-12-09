@@ -2,27 +2,27 @@ var path = require('path');
 var fs = require('fs');
 module.exports.datadir = path.join(__dirname, "../data/sites.txt"); // tests will need to override this.
 
-module.exports.handleRequest = function (request, response) {
+var sendResponse = function(request, response, data){
+  response.writeHead(200, {
+    'content-type': 'text/html'
+  });
+  response.end(data);
+};
 
-  var sendResponse = function(request, response, data){
-    response.writeHead(200, {
-      'Content-Type':'text/html'
-    });
-    response.end(data);
-  };
+var addURL = function(request, response){
 
-  var serveForm = function(request, response){
-    sendResponse(request, response, fs.readFileSync('../web/public/index.html', 'utf8'));
-  };
+};
 
-  var saveURL = function(){
+var servePage = function(request, response){
+  sendResponse(request, response);
+};
 
-  };
+var router = {
+  'GET': servePage,
+  'POST': addURL
+};
 
-  var router = {
-    'GET': serveForm,
-    'POST': saveURL
-  };
-
-  router[request.method](request,response);
+module.exports.handleRequest = function (req, res) {
+  router[req.method].call(this, req, res);
+  console.log(exports.datadir);
 };
