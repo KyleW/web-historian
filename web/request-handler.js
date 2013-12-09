@@ -14,7 +14,9 @@ var addURL = function(request, response){
 };
 
 var servePage = function(request, response){
-  sendResponse(request, response);
+  fs.readFile('./public/index.html',function(err,data){
+      sendResponse(request, response, data);
+  });
 };
 
 var router = {
