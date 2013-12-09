@@ -19,6 +19,7 @@ describe("Node Server Request Listener Function", function() {
     var req = new stubs.Request("/", "GET");
     handler.handleRequest(req, res);
     async(function(){
+      console.log(res)
       expect(res._responseCode).toEqual(200);
       expect(res._data).toMatch(/<input/); // the resulting html should have an input tag
       expect(res._ended).toEqual(true);
