@@ -15,14 +15,24 @@ module.exports.storedSites = path.join(__dirname, "../data/sites/");
 // GET AND POST HANDLERS
 
 var handlePost = function(request, response){
-  fetchURL(request); //get the URL from the post and add the url to our list
-  sendSuccess(request,response);
+  var body = '';
 
-  //check if the file exists and either return or return success
-  // if(requestedURL){
-  //   returnSavedPage(request,response,requestedURL);
-  // } else {
-  // }
+  request.on('data', function(chunk){
+    body += chunk;
+  });
+
+  request.on('end', function(){
+    var targetURL =  body.split('=')[1];
+    var htmlLoc = path.join(exports.storedSites,targetURL);
+    fs.readFile(htmlLoc,function(err,urlData){
+      if(err) {
+        addURL(targetURL);
+        sendResponse(request,response,"We've saved your request.",302);
+      } else {
+        sendResponse(request,response,urlData,302);
+      }
+    });
+  });
 };
 
 var handleGet = function(request, response){
@@ -71,11 +81,6 @@ var returnSavedPage = function(request, response, requestedURL) {
       sendResponse(request,response,urlData,200);
     }
   });
-};
-
-var sendSuccess = function(request, response){
-  //send some sort of success page
-  sendResponse(request,response,"We've Saved your request.",302);
 };
 
 
