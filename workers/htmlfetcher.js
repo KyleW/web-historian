@@ -5,16 +5,15 @@ var fs = require('fs');
 var helpers = require('./lib/html-fetcher-helpers.js');
 
 module.exports.datadir = path.join(__dirname, "../data/sites.txt"); // tests will need to override this.
-
 module.exports.pagedir = path.join(__dirname, "../data/sites/"); // tests will need to override this.
 
 
-var urls = [];
 
-fs.readFile(exports.datadir,function(err,data){
-  if (err) {throw err;}
-  urls = data.split('\n');
+var page = helpers.downloadUrls();
+
+console.log(page);
+
+
+fs.writeFile(filePath+url[i], page, 'utf8', function(err){
+          if(err) throw err;
 });
-
-helpers.downloadUrls(urls, exports.pagedir);
-
