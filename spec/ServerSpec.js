@@ -1,5 +1,8 @@
+var path= require('path');
 var handler = require("../web/request-handler");
 handler.datadir = __dirname + "/testdata/sites.txt";
+handler.htmldir = path.join(__dirname, "../web/public/index.html");
+// handler.storedSites = path.join(__dirname, "../data/sites/");
 var stubs = require("./helpers/stubs");
 var fs = require('fs');
 var res;
