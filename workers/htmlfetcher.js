@@ -3,17 +3,11 @@
 
 var fs = require('fs');
 var helpers = require('./lib/html-fetcher-helpers.js');
+var path = require('path');
 
 module.exports.datadir = path.join(__dirname, "../data/sites.txt"); // tests will need to override this.
 module.exports.pagedir = path.join(__dirname, "../data/sites/"); // tests will need to override this.
 
+console.log("htmlfetcher.js is running");
+helpers.downloadUrls();
 
-
-var page = helpers.downloadUrls();
-
-console.log(page);
-
-
-fs.writeFile(filePath+url[i], page, 'utf8', function(err){
-          if(err) throw err;
-});

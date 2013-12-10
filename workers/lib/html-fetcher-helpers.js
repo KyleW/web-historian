@@ -1,6 +1,8 @@
-var http = require('http');
+// var http = require('http');
 var fs = require('fs');
 var path = require('path');
+var http = require('http-request');
+
 
 module.exports.datadir = path.join(__dirname, "../../data/sites.txt"); // tests will need to override this.
 module.exports.pagedir = path.join(__dirname, "../../data/sites/"); // tests will need to override this.
@@ -8,6 +10,7 @@ module.exports.pagedir = path.join(__dirname, "../../data/sites/"); // tests wil
 
 exports.readUrls = function(filePath, cb){
   var parsedURLString = fs.readFileSync(filePath, 'utf8').split('\n');
+  parsedURLString.pop();
   cb.call(this,parsedURLString);
 };
 
@@ -18,27 +21,17 @@ exports.downloadUrls = function(){
     urls = urlArray;
   });
 
-  console.log(urls);
+  console.log(urls); //debugging
 
   for ( var i = 0 ; i < urls.length ; i++){
-    var options = {
-      hostname: urls[i],
-      port: 80,
-      method: 'GET'
-    };
 
-    var body;
+    var file = exports.pagedir + urls[i];
 
-    return http.request(options, function(res) {
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-        console.log('BODY: ' + chunk);
-        body += chunk;
-      });
-
-      return res.on('end', function(body){
-        return body;
-      });
+    http.get({url: urls[i]}, file , function (err, res) {
+      if (err) {
+        console.error(err);
+        return;
+      }
     });
   }
 };
