@@ -1,11 +1,12 @@
-var path= require('path');
+var path = require('path');
 var handler = require("../web/request-handler");
-handler.datadir = __dirname + "/testdata/sites.txt";
-handler.htmldir = path.join(__dirname, "../web/public/index.html");
-// handler.storedSites = path.join(__dirname, "../data/sites/");
 var stubs = require("./helpers/stubs");
 var fs = require('fs');
 var res;
+
+handler.datadir = __dirname + "/testdata/sites.txt";
+// handler.htmldir = path.join(__dirname, "../web/public/index.html");
+
 
 // allows us to run tests async
 function async(cb){
@@ -49,11 +50,12 @@ describe("Node Server Request Listener Function", function() {
     var req = new stubs.Request("/", "POST", {url: url});
 
     handler.handleRequest(req, res);
-
-    var fileContents = fs.readFileSync(handler.datadir, 'utf8');
-    expect(res._responseCode).toEqual(302);
-    expect(fileContents).toEqual(url + "\n");
-    expect(res._ended).toEqual(true);
+    async(function(){
+      var fileContents = fs.readFileSync(handler.datadir, 'utf8');
+      expect(res._responseCode).toEqual(302);
+      expect(fileContents).toEqual(url + "\n");
+      expect(res._ended).toEqual(true);
+    });
   });
 
   it("Should 404 when asked for a nonexistent file", function(done) {
