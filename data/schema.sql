@@ -1,0 +1,1 @@
+CREATE TABLE pages (url varchar(300), body varchar(1000000));
